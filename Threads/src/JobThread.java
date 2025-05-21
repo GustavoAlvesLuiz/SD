@@ -5,8 +5,12 @@ public class JobThread extends Thread {
 	public void run() {
 		String threadName = Thread.currentThread().getName();
 		
-		for (int i = 0; i <= 1000; i++) {
-			System.err.printf("%s - %d", threadName, i);
+		for (int i = 0; i <= Main.MAX; i++) {			
+			System.err.printf("%s - %d\n", threadName, i);
+			
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {}
 		}
 	}
 }
