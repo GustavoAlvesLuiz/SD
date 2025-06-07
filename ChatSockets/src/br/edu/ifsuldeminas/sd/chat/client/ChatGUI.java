@@ -26,9 +26,8 @@ public class ChatGUI extends JFrame implements MessageContainer {
         setLayout(new BorderLayout(10, 10));
 
      // --- PAINEL SUPERIOR (CONEXÃO) ---
-        // Usando GridLayout para organizar melhor os componentes
-        JPanel topPanel = new JPanel(new java.awt.GridLayout(2, 4, 5, 5)); // 2 linhas, 4 colunas, com espaçamento
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5)); // Adiciona uma margem
+        JPanel topPanel = new JPanel(new java.awt.GridLayout(2, 4, 5, 5));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         topPanel.add(new JLabel("Seu Nome:"));
         nameField = new JTextField();
@@ -42,7 +41,7 @@ public class ChatGUI extends JFrame implements MessageContainer {
         remotePortField = new JTextField();
         topPanel.add(remotePortField);
 
-        topPanel.add(new JPanel()); // Célula vazia para alinhar o botão
+        topPanel.add(new JPanel());
 
         connectButton = new JButton("Conectar");
         topPanel.add(connectButton);
@@ -63,15 +62,13 @@ public class ChatGUI extends JFrame implements MessageContainer {
         bottomPanel.add(sendButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
         
-        // Desabilitar campos de envio até conectar
         messageField.setEnabled(false);
         sendButton.setEnabled(false);
 
         // --- LÓGICA DOS BOTÕES ---
         setupActionListeners();
 
-        // Finaliza configuração e torna visível
-        setLocationRelativeTo(null); // Centraliza na tela
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
@@ -97,7 +94,6 @@ public class ChatGUI extends JFrame implements MessageContainer {
                 return;
             }
 
-            // A classe ChatGUI (this) implementa MessageContainer e será o container
             this.sender = ChatFactory.build("localhost", serverPort, localPort, this);
 
             // Habilita/desabilita campos após a conexão
@@ -142,20 +138,15 @@ public class ChatGUI extends JFrame implements MessageContainer {
         // Divide a mensagem para obter o conteúdo e o remetente
         String[] messageParts = message.split(MessageContainer.FROM);
         String content = messageParts[0];
-        // O .trim() remove espaços e caracteres nulos que podem vir no buffer UDP
         String from = (messageParts.length > 1) ? messageParts[1].trim() : "Desconhecido";
 
-        // IMPORTANTE: Atualizações de componentes Swing devem ocorrer na Event Dispatch Thread (EDT)
-        // Usamos SwingUtilities.invokeLater para garantir isso, pois newMessage é chamada pela thread do Receiver.
         SwingUtilities.invokeLater(() -> {
             chatArea.append(String.format("%s> %s\n", from, content));
-            // Auto-scroll para a última mensagem
             chatArea.setCaretPosition(chatArea.getDocument().getLength());
         });
     }
 
     public static void main(String[] args) {
-        // Inicia a GUI na Event Dispatch Thread
         SwingUtilities.invokeLater(ChatGUI::new);
     }
 }
